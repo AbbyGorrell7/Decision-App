@@ -77,7 +77,41 @@ func _on_item_list_item_activated(index: int) -> void:
 	decision_popup.popup_centered()
 
 func get_browser_location() -> void:
-	fetch_location_by_ip()
+	if OS.has_feature("web"):
+		# Set initial fallback to Wheeling right away just in case JS fails or gets denied
+		current_lat = 40.0640
+		current_lon = -80.7210
+		
+		# Expose this node instance so JavaScript can call functions on it
+		var callback = JavaScriptBridge.create_callback(_on_browser_location_js_bridge)
+		
+		var js_code = """
+			navigator.geolocation.getCurrentPosition(
+				(pos) => {
+					let lat = pos.coords.latitude;
+					let lon = pos.coords.longitude;
+					// Call the Godot callback with lat and lon
+					window.godotLocationCallback(lat, lon);
+				},
+				(err) => {
+					console.log("GPS denied or failed. Defaulting to Wheeling coordinates.");
+				},
+				{ enableHighAccuracy: true, timeout: 5000 }
+			);
+		"""
+		# Bind callback to window object so JS can trigger it seamlessly
+		JavaScriptBridge.get_interface("window").godotLocationCallback = callback
+		JavaScriptBridge.eval(js_code)
+		
+		# Enable button after a short grace period
+		generate_button.disabled = false
+		generate_button.text = "Find Places Around Me"
+	else:
+		# Editor testing fallback (Wheeling, WV)
+		current_lat = 40.0640
+		current_lon = -80.7210
+		generate_button.disabled = false
+		generate_button.text = "Find Places Around Me"
 
 func fetch_location_by_ip() -> void:
 	var url = "https://ipapi.co/json/"
@@ -104,9 +138,10 @@ func _on_ip_location_received(result: int, response_code: int, headers: PackedSt
 		generate_button.text = "Find Places Around Me"
 	
 func _on_browser_location_js_bridge(args: Array) -> void:
-	current_lat = args[0]
-	current_lon = args[1]
-	print("Success: Godot engine variables updated good!")
+	if args.size() >= 2:
+		current_lat = float(args[0])
+		current_lon = float(args[1])
+		print("Success: Real device GPS coordinates loaded! ", current_lat, ", ", current_lon)
 	generate_button.disabled = false
 	generate_button.text = "Find Places Around Me"
 
