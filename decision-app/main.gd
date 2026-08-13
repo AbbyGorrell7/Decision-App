@@ -123,26 +123,46 @@ func fetch_local_restaurants() -> void:
 	search_keyword = line_edit.text.strip_edges()
 	if search_keyword == "":
 		search_keyword = "food"
+		
 	print("Searching for '", search_keyword, "' around: ", current_lat, ", ", current_lon)
-	var query_param = search_keyword.uri_encode()
-	if search_keyword.to_lower() == "gas":
-		query_param = "amenity=fuel"
-	elif search_keyword.to_lower() == "food" or search_keyword.to_lower() == "restaurant":
-		query_param = "amenity=restaurant"
-	elif search_keyword.to_lower() == "coffee" or search_keyword.to_lower() == "cafe":
-		query_param = "amenity=cafe"
-	var url = "https://nominatim.openstreetmap.org/search?q=%s&format=json&lat=%f&lon=%f&bounded=1&limit=15" % [query_param, current_lat, current_lon]
+	
+	# Translate searches into clean keywords Nominatim understands
+	var query_param = search_keyword
+	var lower_key = search_keyword.to_lower()
+	if "gas" in lower_key:
+		query_param = "gas station"
+	elif "food" in lower_key or "restaurant" in lower_key:
+		query_param = "restaurant"
+	elif "coffee" in lower_key or "cafe" in lower_key:
+		query_param = "cafe"
+	elif "park" in lower_key:
+		query_param = "park"
+
+	# Build a 10-mile search box around the user's latitude and longitude
+	var delta = 0.15
+	var min_lon = current_lon - delta
+	var max_lat = current_lat + delta
+	var max_lon = current_lon + delta
+	var min_lat = current_lat - delta
+	
+	var url = "https://nominatim.openstreetmap.org/search?q=%s&format=json&viewbox=%f,%f,%f,%f&bounded=1&limit=15" % [
+		query_param.uri_encode(), min_lon, max_lat, max_lon, min_lat
+	]
+	
 	if http_request.request_completed.is_connected(_on_restaurant_data_received):
 		http_request.request_completed.disconnect(_on_restaurant_data_received)
 	
 	http_request.request_completed.connect(_on_restaurant_data_received)
-	http_request.timeout = 10.0
+	http_request.timeout = 5.0 # Fast 5-second timeout
+	
 	var headers = PackedStringArray([
 		"User-Agent: DecisionApp/1.0 (GodotEngineStudentProject)"
 	])
-	var error = http_request.request(url)
+	
+	var error = http_request.request(url, headers)
 	if error != OK:
-		print("An error has occurred starting the restaurant fetch.")
+		print("HTTP Request failed to start - loading fallback dataset.")
+		_load_fallback_dataset()
 
 func _on_restaurant_data_received(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
 	var raw_text = body.get_string_from_utf8()
@@ -171,8 +191,8 @@ func _on_restaurant_data_received(result: int, response_code: int, headers: Pack
 			if choices.size() > 0:
 				loaded_any = true
 				print("Success: Loaded ", choices.size(), " live spots form Nominatim!")
-	if not loaded_any: 
-		print("Network clocked or empty. Activating Local Dataset Fallback")
+	if choices.size() < 3:
+		print("Fewer than 3 spots found. Activating Local Dataset Fallback!")
 		_load_fallback_dataset()
 
 func _load_fallback_dataset() -> void:
