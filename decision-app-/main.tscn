@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://dbommfhsc1x0h"]
+
+[node name="Main" type="Control" unique_id=233512156]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 289.0
+offset_top = 1.0
+offset_right = 289.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1855033174]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 720.0
+offset_top = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.9490196, 0.91764706, 0.8784314, 1)
