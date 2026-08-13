@@ -11,7 +11,8 @@ config_version=5
 [application]
 
 config/name="Decision App"
-config/features=PackedStringArray("4.7", "Mobile")
+run/main_scene="uid://dbommfhsc1x0h"
+config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 
 [display]

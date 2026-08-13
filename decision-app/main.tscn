@@ -1,24 +1,140 @@
 [gd_scene format=3 uid="uid://dbommfhsc1x0h"]
 
+[ext_resource type="FontFile" uid="uid://caf8y365bjjes" path="res://Playfair_Display/PlayfairDisplay-VariableFont_wght.ttf" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://ubbhbicun4p4" path="res://main.gd" id="2_0xm2m"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h2yge"]
+content_margin_top = 13.0
+content_margin_bottom = 13.0
+bg_color = Color(0.60784316, 0.5568628, 0.78039217, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0xm2m"]
+content_margin_top = 13.0
+content_margin_bottom = 13.0
+bg_color = Color(0.7411765, 0.6509804, 0.80784315, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1bvp3"]
+content_margin_top = 13.0
+content_margin_bottom = 13.0
+bg_color = Color(0.7411765, 0.6509804, 0.80784315, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lquwl"]
+content_margin_top = 13.0
+content_margin_bottom = 13.0
+bg_color = Color(0.60784316, 0.5568628, 0.78039217, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="Theme" id="Theme_7mycd"]
+default_font = ExtResource("1_ig7tw")
+default_font_size = 30
+AcceptDialog/styles/panel = SubResource("StyleBoxFlat_h2yge")
+Button/styles/disabled = null
+Button/styles/hover = SubResource("StyleBoxFlat_0xm2m")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_h2yge")
+Button/styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_1bvp3")
+Button/styles/normal = SubResource("StyleBoxFlat_lquwl")
+ItemList/styles/panel = SubResource("StyleBoxFlat_h2yge")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_h2yge")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_h2yge")
+
 [node name="Main" type="Control" unique_id=233512156]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 289.0
-offset_top = 1.0
-offset_right = 289.0
-offset_bottom = 1.0
+offset_left = -2.0
+offset_right = -2.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_7mycd")
+script = ExtResource("2_0xm2m")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1855033174]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 720.0
-offset_top = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.9490196, 0.91764706, 0.8784314, 1)
+
+[node name="UILayout" type="VBoxContainer" parent="." unique_id=2018808419]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="Label" type="Label" parent="UILayout" unique_id=1739995507]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.60784316, 0.5568628, 0.78039217, 1)
+theme_override_font_sizes/font_size = 30
+text = "What can I help you decide today?"
+
+[node name="LineEdit" type="LineEdit" parent="UILayout" unique_id=154192207]
+custom_minimum_size = Vector2(350, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.7058824, 0.827451, 0.8509804, 1)
+theme_override_colors/font_selected_color = Color(0.7058824, 0.827451, 0.8509804, 1)
+theme_override_colors/font_placeholder_color = Color(0.7058824, 0.827451, 0.8509804, 1)
+placeholder_text = "Type Here"
+alignment = 1
+
+[node name="ItemList" type="ItemList" parent="UILayout" unique_id=447605398]
+custom_minimum_size = Vector2(350, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.7058824, 0.827451, 0.8509804, 1)
+theme_override_colors/font_hovered_color = Color(0.7411765, 0.6509804, 0.80784315, 1)
+theme_override_colors/font_hovered_selected_color = Color(0.7411765, 0.6509804, 0.80784315, 1)
+theme_override_colors/font_selected_color = Color(0.7411765, 0.6509804, 0.80784315, 1)
+theme_override_colors/guide_color = Color(0.7411765, 0.6509804, 0.80784315, 1)
+
+[node name="Button" type="Button" parent="UILayout" unique_id=1254749090]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.7058824, 0.827451, 0.8509804, 1)
+text = "   GENERATE DECISION   "
+
+[node name="Button2" type="Button" parent="UILayout" unique_id=1485952000]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.7058824, 0.827451, 0.8509804, 1)
+text = "   RESET LIST   "
+
+[node name="DecisionPopup" type="AcceptDialog" parent="." unique_id=1599893068]
+
+[node name="HTTPRequest" type="HTTPRequest" parent="." unique_id=226232102]
+
+[node name="IPRequest" type="HTTPRequest" parent="." unique_id=369352082]
+
+[connection signal="text_submitted" from="UILayout/LineEdit" to="." method="_on_line_edit_text_submitted"]
+[connection signal="item_activated" from="UILayout/ItemList" to="." method="_on_item_list_item_activated"]
+[connection signal="pressed" from="UILayout/Button" to="." method="_on_generate_button_pressed"]
+[connection signal="pressed" from="UILayout/Button2" to="." method="_on_reset_button_pressed"]
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]
